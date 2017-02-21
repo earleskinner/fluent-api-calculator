@@ -1,18 +1,12 @@
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Razor;
-using System.Globalization;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
+using Fluent.Core;
 using Fluent.Core.Middleware;
-using Fluent.Core.Services.Context;
-using Fluent.Core.Services.Localization;
-using System;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Fluent.Api.Calculator
 {
@@ -38,55 +32,22 @@ namespace Fluent.Api.Calculator
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add localization based on JSON files
-            services.AddJsonLocalization(options => options.ResourcesPath = "Resources");
-
             // Add fluent context
-            services.AddFluentContext();
+            services.AddFluent();
 
-            // Add framework services
-            services
-                .AddMvc()
-                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
-
-            // Add API versioning
-            services.AddApiVersioning();
-
-            // Configure framework services
-            services.Configure<RequestLocalizationOptions>(
-                options =>
-                {
-                    var supportedCultures = new List<CultureInfo>
-                    {
-                        new CultureInfo("en"),
-                        new CultureInfo("en-GB"),
-                        new CultureInfo("en-US")
-                    };
-                    options.DefaultRequestCulture = new RequestCulture(culture: "en", uiCulture: "en");
-                    options.SupportedCultures = supportedCultures;
-                    options.SupportedUICultures = supportedCultures;
-                });
+            services.AddMvc()
+                    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory
-                .AddConsole()
+                .AddConsole(LogLevel.Information)
                 .AddDebug();
 
             var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(locOptions.Value);
-
-            // if (env.IsDevelopment())
-            // {
-            //     app.UseDeveloperExceptionPage();
-            //     app.UseBrowserLink();
-            // }
-            // else
-            // {
-            //     app.UseExceptionHandler("/Home/Error");
-            // }
 
             // Run middleware to populate fluent context
             app.UseMiddleware<FluentCorrelationMiddleware>();
