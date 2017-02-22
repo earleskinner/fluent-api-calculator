@@ -1,0 +1,4 @@
+{
+    "calculation-model:no-request": "Must contain a request body",
+    "calculation-model:must-contain-more-than-one": "Must contain more than number"
+}

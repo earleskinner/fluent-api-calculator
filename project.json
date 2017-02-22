@@ -5,6 +5,7 @@
     "emitEntryPoint": true
   },
   "dependencies": {
+    "NETStandard.Library": "1.6.1",
     "fluent-core": "1.0.0",
     "Microsoft.AspNetCore.Mvc" : "1.1.1",
     "Microsoft.AspNetCore.Server.Kestrel": "1.1.0",
@@ -27,5 +28,8 @@
       },
       "imports": "dnxcore50"
     }
+  },
+  "runtimes": {
+    "win10-x64": { }
   }
 }
