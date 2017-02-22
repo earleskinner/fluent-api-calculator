@@ -32,8 +32,7 @@ namespace Fluent.Api.Calculator.Validation
         {
             response = new CalculationModelResponse
             {
-                CorrelationId = _context.CorrelationId,
-                Errors = new List<ValidationMessage>()
+                CorrelationId = _context.CorrelationId
             };
 
             if (request == null)
