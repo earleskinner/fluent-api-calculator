@@ -13,6 +13,7 @@ namespace Fluent.Api.Calculator.Controllers
     public class CalculationControllerV1 : BaseApiController
     {
         private readonly IHtmlLocalizer<Program> _localizer;
+        private CalculationModelInputValidatior _validator;
 
         public CalculationControllerV1(IFluentContext fluent,
                                        CommonResponses common,
@@ -23,15 +24,16 @@ namespace Fluent.Api.Calculator.Controllers
                 throw new ArgumentNullException(nameof(localizer));
             }
             _localizer = localizer;
+
+            _validator = new CalculationModelInputValidatior(fluent, localizer);
         }
 
         [HttpPost]
         [ActionName("add")]
         public ActionResult Add([FromBody] CalculationModelRequest model)
         {
-            var validator = new CalculationModelInputValidatior(Fluent, _localizer);
             CalculationModelResponse response;
-            var result = validator.IsValid(model, out response);
+            var result = _validator.IsValid(model, out response);
             if (!result)
             {
                 return BadRequest(response);
@@ -46,9 +48,8 @@ namespace Fluent.Api.Calculator.Controllers
         [ActionName("minus")]
         public ActionResult Minus([FromBody] CalculationModelRequest model)
         {
-            var validator = new CalculationModelInputValidatior(Fluent, _localizer);
             CalculationModelResponse response;
-            var result = validator.IsValid(model, out response);
+            var result = _validator.IsValid(model, out response);
             if (!result)
             {
                 return BadRequest(response);
@@ -63,9 +64,8 @@ namespace Fluent.Api.Calculator.Controllers
         [ActionName("times")]
         public ActionResult Times([FromBody] CalculationModelRequest model)
         {
-            var validator = new CalculationModelInputValidatior(Fluent, _localizer);
             CalculationModelResponse response;
-            var result = validator.IsValid(model, out response);
+            var result = _validator.IsValid(model, out response);
             if (!result)
             {
                 return BadRequest(response);
@@ -80,9 +80,8 @@ namespace Fluent.Api.Calculator.Controllers
         [ActionName("divide")]
         public ActionResult Divide([FromBody] CalculationModelRequest model)
         {
-            var validator = new CalculationModelInputValidatior(Fluent, _localizer);
             CalculationModelResponse response;
-            var result = validator.IsValid(model, out response);
+            var result = _validator.IsValid(model, out response);
             if (!result)
             {
                 return BadRequest(response);
